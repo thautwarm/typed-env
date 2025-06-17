@@ -1,0 +1,20 @@
+[package]
+name = "typed-env"
+version = "0.1.0"
+edition = "2021"
+authors = ["Taine Zhang <twshe@outlook.com>"]
+description = "Describing the requirements of environment variables in a type-safe and ergonomic way"
+license = "MIT"
+repository = "https://github.com/thautwarm/typed-env"
+homepage = "https://github.com/thautwarm/typed-env"
+documentation = "https://docs.rs/typed-env"
+keywords = ["environment", "config", "env", "configuration", "type-safe"]
+categories = ["config", "development-tools"]
+readme = "README.md"
+exclude = [
+    ".github/*",
+    "examples/*",
+]
+
+[dependencies]
+thiserror = "2.0.12"
