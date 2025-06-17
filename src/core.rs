@@ -65,9 +65,20 @@ where
                 }
 
                 if let Ok(value) = std::env::var(self._name) {
-                    EnvarParser::<T>::parse(Cow::Borrowed(self._name), value.as_str())
-                        // preemption is possible, we make sure to maintain consistency
-                        .map(|value| once_loaded.get_or_init(move || value).clone())
+                    match EnvarParser::<T>::parse(Cow::Borrowed(self._name), value.as_str()) {
+                        Ok(value) => {
+                            // preemption is possible, we make sure to maintain consistency
+                            Ok(once_loaded.get_or_init(move || value).clone())
+                        }
+                        Err(EnvarError::TryDefault(varname)) => {
+                            if let EnvarDef::Default(default) = (self._default_factory)() {
+                                Ok(once_loaded.get_or_init(move || default).clone())
+                            } else {
+                                Err(EnvarError::NotSet(varname))
+                            }
+                        }
+                        Err(e) => Err(e),
+                    }
                 } else {
                     if let Some(value) = once_loaded.get() {
                         return Ok(value.clone());
@@ -93,6 +104,13 @@ where
                                 value.as_str(),
                             ) {
                                 Ok(value) => Some(value),
+                                Err(EnvarError::TryDefault(varname)) => {
+                                    if let EnvarDef::Default(default) = (self._default_factory)() {
+                                        return Ok(default);
+                                    } else {
+                                        return Err(EnvarError::NotSet(varname));
+                                    }
+                                }
                                 Err(e) => {
                                     return Err(e);
                                 }
@@ -202,6 +220,20 @@ where
         }
 
         Ok(ListEnvar::new(list))
+    }
+}
+
+impl<T> EnvarParse<Option<T>> for EnvarParser<Option<T>>
+where
+    EnvarParser<T>: EnvarParse<T>,
+{
+    fn parse(varname: Cow<'static, str>, value: &str) -> Result<Option<T>, EnvarError> {
+        let value = value.trim();
+        if value.is_empty() {
+            return Err(EnvarError::TryDefault(varname));
+        }
+        let parsed = EnvarParser::<T>::parse(varname, value);
+        Ok(Some(parsed?))
     }
 }
 

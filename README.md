@@ -229,6 +229,7 @@ match DATABASE_URL.value() {
 
 - **`EnvarError::NotSet(name)`**: Environment variable is not set and no default provided
 - **`EnvarError::ParseError { varname, typename, value, reason }`**: Failed to parse the value
+- **`EnvarError::TryDefault(varname)`**: A "soft" error, indicating that the environment variable could fallback to the default value, if specified with `EnvarDef::Default`.
 
 ## Contributing
 

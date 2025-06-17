@@ -468,3 +468,18 @@ fn test_envar_def_to_option() {
     let unset_def: EnvarDef<i32> = EnvarDef::Unset;
     assert_eq!(unset_def.to_option(), None);
 }
+
+#[test]
+fn test_envar_option() {
+    let _lock = get_test_lock();
+    set_env_var("TEST_OPTION1", "");
+    static VAR_OPTION: Envar<Option<i32>> =
+        Envar::on_startup("TEST_OPTION1", || EnvarDef::Default(Some(42)));
+    assert_eq!(VAR_OPTION.value().unwrap(), Some(42));
+
+    clear_env_var("TEST_OPTION2");
+    static VAR_OPTION2: Envar<Option<i32>> =
+        Envar::on_demand("TEST_OPTION2", || EnvarDef::Default(Some(42)));
+    assert!(std::env::var("TEST_OPTION2").is_err());
+    assert_eq!(VAR_OPTION2.value().unwrap(), Some(42));
+}

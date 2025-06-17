@@ -14,4 +14,12 @@ pub enum EnvarError {
 
     #[error("Environment variable {0} is not set")]
     NotSet(Cow<'static, str>),
+
+    // This is a special case:
+    // Sometimes even if the environment variable is set, we
+    // might prefer to use the default value (if any).
+    // For example, if the environment variable is set to an empty string,
+    // we might prefer to use the default value.
+    #[error("Environment variable {0} is not set and default factory returned None")]
+    TryDefault(Cow<'static, str>),
 }
