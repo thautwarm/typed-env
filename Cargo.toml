@@ -1,6 +1,6 @@
 [package]
 name = "typed-env"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 authors = ["Taine Zhang <twshe@outlook.com>"]
 description = "Describing the requirements of environment variables in a type-safe and ergonomic way"
