@@ -4,7 +4,7 @@
 [![Documentation](https://docs.rs/typed-env/badge.svg)](https://docs.rs/typed-env)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/thautwarm/typed-env/blob/main/LICENSE)
 [![CI](https://github.com/thautwarm/typed-env/workflows/CI/badge.svg)](https://github.com/thautwarm/typed-env/actions)
-[![codecov](https://codecov.io/gh/thautwarm/typed-env/branch/main/graph/badge.svg)](https://codecov.io/gh/thautwarm/typed-env)
+[![codecov](https://codecov.io/gh/thautwarm/typed-env/graph/badge.svg?token=Mu3ifjvEeW)](https://codecov.io/gh/thautwarm/typed-env)
 
 Describe the requirements of environment variables in a type-safe and ergonomic way.
 
