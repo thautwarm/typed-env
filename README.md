@@ -27,7 +27,7 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-typed-env = "0.1"
+typed-env = "0.2"
 ```
 
 ### Basic Usage
