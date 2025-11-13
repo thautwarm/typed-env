@@ -1,5 +1,5 @@
 use crate::{Envar, EnvarDef, EnvarError, ListEnvar, ListEnvarConfig};
-use std::sync::Mutex;
+use std::{path::PathBuf, sync::Mutex};
 
 static SINGLE_THREAD_ASSURANCE: Mutex<()> = Mutex::new(());
 
@@ -140,6 +140,16 @@ fn test_string_type() {
     // Test with whitespace
     set_env_var("TEST_STRING", "  spaces around  ");
     assert_eq!(VAR_STRING.value().unwrap(), "  spaces around  ");
+}
+
+#[test]
+fn test_pathbuf_type() {
+  let _lock = get_test_lock();
+
+  clear_env_var("TEST_STRING");
+  static VAR_STRING: Envar<PathBuf> = Envar::on_demand("TEST_STRING", || EnvarDef::Unset);
+  set_env_var("TEST_STRING", "/some/path");
+  assert_eq!(VAR_STRING.value().unwrap(), PathBuf::from("/some/path"));
 }
 
 #[test]

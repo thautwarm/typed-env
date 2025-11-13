@@ -2,7 +2,7 @@ use crate::error::EnvarError;
 use crate::list_envar::ListEnvar;
 use crate::list_envar::ListEnvarConfig;
 use crate::ErrorReason;
-use std::borrow::Cow;
+use std::{borrow::Cow, path::PathBuf};
 
 enum EnvarStore<T> {
     OnStartup(std::sync::OnceLock<T>),
@@ -194,6 +194,12 @@ impl EnvarParse<bool> for EnvarParser<bool> {
             }),
         });
     }
+}
+
+impl EnvarParse<PathBuf> for EnvarParser<PathBuf> {
+  fn parse(_varname: Cow<'static, str>, value: &str) -> Result<PathBuf, EnvarError> {
+        Ok(PathBuf::from(value))
+  }
 }
 
 impl<T, C> EnvarParse<ListEnvar<T, C>> for EnvarParser<ListEnvar<T, C>>
