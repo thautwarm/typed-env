@@ -16,5 +16,9 @@ exclude = [
     "examples/*",
 ]
 
+[features]
+log = ["dep:log"]
+
 [dependencies]
+log = { optional = true, version = "0.4" }
 thiserror = "2.0.12"

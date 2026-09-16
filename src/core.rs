@@ -196,6 +196,53 @@ impl EnvarParse<bool> for EnvarParser<bool> {
     }
 }
 
+#[cfg(feature = "log")]
+impl EnvarParse<log::Level> for EnvarParser<log::Level> {
+    fn parse(varname: Cow<'static, str>, value: &str) -> Result<log::Level, EnvarError> {
+        match value.trim().to_lowercase().as_str() {
+            "debug" => Ok(log::Level::Debug),
+            "error" => Ok(log::Level::Error),
+            "info" => Ok(log::Level::Info),
+            "trace" => Ok(log::Level::Trace),
+            "warn" => Ok(log::Level::Warn),
+            _ => Err(EnvarError::ParseError {
+                varname,
+                typename: "Level",
+                value: value.to_string(),
+                reason: ErrorReason::new({
+                    let owned_value = value.to_string();
+                    move || owned_value
+                }),
+            }),
+        }
+    }
+}
+
+#[cfg(feature = "log")]
+impl EnvarParse<log::LevelFilter> for EnvarParser<log::LevelFilter> {
+    fn parse(varname: Cow<'static, str>, value: &str) -> Result<log::LevelFilter, EnvarError> {
+        match value.trim().to_lowercase().as_str() {
+            "debug" => Ok(log::LevelFilter::Debug),
+            "error" => Ok(log::LevelFilter::Error),
+            "info" => Ok(log::LevelFilter::Info),
+            "trace" => Ok(log::LevelFilter::Trace),
+            "warn" => Ok(log::LevelFilter::Warn),
+            off if crate::special_constants::FALSE_ALTERNATIVES.contains(&off) => {
+                Ok(log::LevelFilter::Off)
+            }
+            _ => Err(EnvarError::ParseError {
+                varname,
+                typename: "LevelFilter",
+                value: value.to_string(),
+                reason: ErrorReason::new({
+                    let owned_value = value.to_string();
+                    move || owned_value
+                }),
+            }),
+        }
+    }
+}
+
 impl EnvarParse<PathBuf> for EnvarParser<PathBuf> {
   fn parse(_varname: Cow<'static, str>, value: &str) -> Result<PathBuf, EnvarError> {
         Ok(PathBuf::from(value))
